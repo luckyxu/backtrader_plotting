@@ -43,9 +43,11 @@ class Figure(object):
 
     def _init_figure(self):
         # plot height will be set later
-        f = figure(tools=Figure._tools, x_axis_type='linear', aspect_ratio=self._scheme.plotaspectratio)
-        # TODO: backend webgl (output_backend="webgl") removed due to this bug:
-        # https://github.com/bokeh/bokeh/issues/7568
+        f = figure(tools=Figure._tools,
+                   x_axis_type='linear',
+                   aspect_ratio=self._scheme.plotaspectratio,
+                   output_backend=self._scheme.output_backend,
+                   )
 
         f.y_range.range_padding = self._scheme.y_range_padding
 
@@ -289,7 +291,7 @@ class Figure(object):
             raise Exception(f"Unsupported style '{self._scheme.style}'")
 
         # make sure the regular y-axis only scales to the normal data on 1st axis (not to e.g. volume data on 2nd axis)
-        self.bfigure.y_range.renderers.append(renderer)
+        self.bfigure.y_range.renderers = [renderer]
 
         if self._scheme.volume and self._scheme.voloverlay:
             self.plot_volume(data, self._scheme.voltrans, True)
